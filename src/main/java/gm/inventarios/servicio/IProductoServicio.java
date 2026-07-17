@@ -7,6 +7,6 @@ import gm.inventarios.modelo.Producto;
 public interface IProductoServicio {
     List<Producto> listaProductos();
     Producto buscarProductoPorId(Integer idProducto);
-    void guardarProducto(Producto producto);
+    Producto guardarProducto(Producto producto);
     void eliminarProductoPorId(Integer idProducto);
 }
