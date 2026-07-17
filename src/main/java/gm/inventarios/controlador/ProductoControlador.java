@@ -5,11 +5,14 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import gm.inventarios.excepcion.RecursoNoEncontradoExcepcion;
 import gm.inventarios.modelo.Producto;
 import gm.inventarios.servicio.ProductoService;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,7 +29,7 @@ public class ProductoControlador {
     private ProductoService productoService;
 
     @GetMapping("/productos")
-    public List<Producto> obtenerProducto() {
+    public List<Producto> obtenerProductos() {
         List<Producto> productos = this.productoService.listaProductos();
         logger.info("Productos obtenidos:");
         productos.forEach(producto -> logger.info(producto.toString()));
@@ -38,5 +41,17 @@ public class ProductoControlador {
         logger.info("Producto a agregar: " + producto);
         return this.productoService.guardarProducto(producto);
     }
+
+    @GetMapping("/productos/{id}")
+    public ResponseEntity<Producto> obtenerProductoPorId (@PathVariable int id) {
+        Producto producto = this.productoService.buscarProductoPorId(id);
+        if (producto != null) {
+            return ResponseEntity.ok(producto);
+        } 
+
+        throw new RecursoNoEncontradoExcepcion("No se encontro el id: " + id);
+    }
+    
+    
     
 }
