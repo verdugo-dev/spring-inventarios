@@ -16,6 +16,7 @@ import gm.inventarios.excepcion.RecursoNoEncontradoExcepcion;
 import gm.inventarios.modelo.Producto;
 import gm.inventarios.servicio.ProductoService;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 
@@ -52,6 +53,15 @@ public class ProductoControlador {
         throw new RecursoNoEncontradoExcepcion("No se encontro el id: " + id);
     }
     
-    
-    
+    @PutMapping("/productos/{id}")
+    public ResponseEntity<Producto> actualizarProducto(@PathVariable int id, @RequestBody Producto productoRecibido) {
+        Producto producto = this.productoService.buscarProductoPorId(id);
+
+        producto.setDescripcion(productoRecibido.getDescripcion());
+        producto.setPrecio(productoRecibido.getPrecio());
+        producto.setExistencia(productoRecibido.getExistencia());
+
+        this.productoService.guardarProducto(producto);
+        return ResponseEntity.ok(producto);
+    }
 }
