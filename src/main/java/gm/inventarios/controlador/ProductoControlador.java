@@ -1,12 +1,15 @@
 package gm.inventarios.controlador;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -64,4 +67,21 @@ public class ProductoControlador {
         this.productoService.guardarProducto(producto);
         return ResponseEntity.ok(producto);
     }
+
+    @DeleteMapping("/productos/{id}") 
+    public ResponseEntity<Map<String, Boolean>> eliminarProducto(@PathVariable int id) {
+        Producto producto = this.productoService.buscarProductoPorId(id);
+
+        if (producto == null) {
+            throw new RecursoNoEncontradoExcepcion("No se encontro el Id: " + id);
+        }
+
+        this.productoService.eliminarProductoPorId(producto.getIdProducto());
+        
+        Map<String, Boolean> respuesta = new HashMap<>();
+        respuesta.put("Eliminado", Boolean.TRUE);
+
+        return ResponseEntity.ok(respuesta);
+    }
+
 }
